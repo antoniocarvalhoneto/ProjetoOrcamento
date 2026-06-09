@@ -1,3 +1,5 @@
+using ProjetoOrcamento.Forms;
+
 namespace ProjetoOrcamento
 {
     internal static class Program
