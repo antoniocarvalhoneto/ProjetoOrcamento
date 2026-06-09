@@ -1,10 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ProjetoOrcamento.Models
+﻿public class ItemOrcamento
 {
-    internal class ItemOrcamento
+    public Servico Servico { get; set; }
+
+    public int Quantidade { get; set; }
+
+    public decimal Subtotal
     {
+        get
+        {
+            return Servico.PrecoUnitario * Quantidade;
+        }
     }
 }

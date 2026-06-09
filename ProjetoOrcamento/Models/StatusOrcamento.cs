@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ProjetoOrcamento.Models
+﻿public enum StatusOrcamento
 {
-    internal class StatusOrcamento
-    {
-    }
+    Pendente,
+    Aprovado,
+    Rejeitado
 }

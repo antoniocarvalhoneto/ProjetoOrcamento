@@ -1,10 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ProjetoOrcamento.Models
+﻿public class Cliente
 {
-    internal class Clientes
+    public string Nome { get; set; }
+    public string Contato { get; set; }
+
+    public Cliente(string nome, string contato)
     {
+        Nome = nome;
+        Contato = contato;
+    }
+
+    public override string ToString()
+    {
+        return Nome;
     }
 }

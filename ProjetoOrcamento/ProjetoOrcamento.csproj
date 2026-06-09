@@ -9,8 +9,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Models\" />
-    <Folder Include="DataDatData\" />
+    <Compile Remove="DataDatData\**" />
+    <EmbeddedResource Remove="DataDatData\**" />
+    <None Remove="DataDatData\**" />
   </ItemGroup>
 
 </Project>
