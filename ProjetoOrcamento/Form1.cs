@@ -19,12 +19,12 @@ namespace ProjetoOrcamento
 
         private void btnServicos_Click(object sender, EventArgs e)
         {
-            FrmServicos tela = new FrmServicos();
+            FrmOrcamentos tela = new FrmOrcamentos();
             tela.ShowDialog();
         }
         private void btnOrcamentos_Click(object sender, EventArgs e)
         {
-            FrmOrcamentos tela = new FrmOrcamentos();
+            FrmServicos tela = new FrmServicos();
             tela.ShowDialog();
         }
     }
