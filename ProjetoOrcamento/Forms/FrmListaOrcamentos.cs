@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ProjetoOrcamento
+namespace ProjetoOrcamento.Forms
 {
-    internal class FrmOrcamentos
+    internal class FrmListaOrcamentos
     {
     }
 }
