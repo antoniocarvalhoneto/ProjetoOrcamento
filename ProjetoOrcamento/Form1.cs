@@ -19,11 +19,13 @@ namespace ProjetoOrcamento
 
         private void btnServicos_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Abrir cadastro de serviços", "Serviços", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            FrmServicos tela = new FrmServicos();
+            tela.ShowDialog();
         }
         private void btnOrcamentos_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Abrir cadastro de orçamentos", "Orçamentos", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            FrmOrcamentos tela = new FrmOrcamentos();
+            tela.ShowDialog();
         }
     }
 }
