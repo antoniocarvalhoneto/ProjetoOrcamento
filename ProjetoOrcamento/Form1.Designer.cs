@@ -36,57 +36,62 @@
             // 
             // btnClientes
             // 
-            btnClientes.Location = new Point(164, 404);
+            btnClientes.Location = new Point(187, 539);
+            btnClientes.Margin = new Padding(3, 4, 3, 4);
             btnClientes.Name = "btnClientes";
-            btnClientes.Size = new Size(100, 42);
+            btnClientes.Size = new Size(114, 56);
             btnClientes.TabIndex = 0;
             btnClientes.Text = "Clientes";
             btnClientes.UseVisualStyleBackColor = true;
-            btnClientes.Click += this.button1_Click;
+            btnClientes.Click += btnClientes_Click;
             // 
             // btnServicos
             // 
-            btnServicos.Location = new Point(444, 406);
+            btnServicos.Location = new Point(507, 541);
+            btnServicos.Margin = new Padding(3, 4, 3, 4);
             btnServicos.Name = "btnServicos";
-            btnServicos.Size = new Size(119, 40);
+            btnServicos.Size = new Size(136, 53);
             btnServicos.TabIndex = 1;
             btnServicos.Text = "Serviços";
             btnServicos.UseVisualStyleBackColor = true;
-            btnServicos.Click += this.button1_Click_1;
+            btnServicos.Click += btnServicos_Click;
             // 
             // btnOrcamentos
             // 
-            btnOrcamentos.Location = new Point(734, 406);
+            btnOrcamentos.Location = new Point(839, 541);
+            btnOrcamentos.Margin = new Padding(3, 4, 3, 4);
             btnOrcamentos.Name = "btnOrcamentos";
-            btnOrcamentos.Size = new Size(114, 40);
+            btnOrcamentos.Size = new Size(130, 53);
             btnOrcamentos.TabIndex = 2;
             btnOrcamentos.Text = "Orçamentos";
             btnOrcamentos.UseVisualStyleBackColor = true;
+            btnOrcamentos.Click += btnOrcamentos_Click;
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(409, 92);
+            label1.Location = new Point(467, 123);
             label1.Name = "label1";
-            label1.Size = new Size(154, 15);
+            label1.Size = new Size(194, 20);
             label1.TabIndex = 3;
             label1.Text = "EMISSOR DE ORÇAMENTOS";
-            label1.Click += this.label1_Click;
             // 
             // Form1
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1025, 586);
+            ClientSize = new Size(1078, 677);
             Controls.Add(label1);
             Controls.Add(btnOrcamentos);
             Controls.Add(btnServicos);
             Controls.Add(btnClientes);
+            Margin = new Padding(3, 4, 3, 4);
             Name = "Form1";
             Text = "Form1";
             ResumeLayout(false);
             PerformLayout();
         }
+
 
         #endregion
 
