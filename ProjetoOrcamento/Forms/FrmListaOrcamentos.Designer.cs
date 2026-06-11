@@ -50,6 +50,7 @@
             btnAprovar.TabIndex = 1;
             btnAprovar.Text = "Aprovar";
             btnAprovar.UseVisualStyleBackColor = true;
+            btnAprovar.Click += btnAprovar_Click;
             // 
             // btnRejeitar
             // 
@@ -59,6 +60,7 @@
             btnRejeitar.TabIndex = 2;
             btnRejeitar.Text = "Rejeitar";
             btnRejeitar.UseVisualStyleBackColor = true;
+            btnRejeitar.Click += btnRejeitar_Click;
             // 
             // FrmListaOrcamentos
             // 
@@ -71,6 +73,7 @@
             Margin = new Padding(3, 2, 3, 2);
             Name = "FrmListaOrcamentos";
             Text = "FrmListaOrcamentos";
+            Load += Form_Load;
             ((System.ComponentModel.ISupportInitialize)dgvOrcamentos).EndInit();
             ResumeLayout(false);
         }

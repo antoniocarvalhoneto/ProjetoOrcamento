@@ -100,6 +100,7 @@
             btnAdicionarItem.TabIndex = 6;
             btnAdicionarItem.Text = "Adicionar Item";
             btnAdicionarItem.UseVisualStyleBackColor = true;
+            btnAdicionarItem.Click += btnAdicionarItem_Click;
             // 
             // toolStrip1
             // 
@@ -126,6 +127,7 @@
             btnCriarOrcamento.TabIndex = 9;
             btnCriarOrcamento.Text = "Criar Orçamento";
             btnCriarOrcamento.UseVisualStyleBackColor = true;
+            btnCriarOrcamento.Click += btnCriarOrcamento_Click;
             // 
             // FrmServicos
             // 
@@ -143,7 +145,7 @@
             Controls.Add(cmbCliente);
             Controls.Add(label1);
             Name = "FrmServicos";
-            Text = "FrmOrcamentos";
+            Text = "Criar Orçamento";
             Load += FrmServicos_Load;
             ((System.ComponentModel.ISupportInitialize)nudQuantidade).EndInit();
             ResumeLayout(false);

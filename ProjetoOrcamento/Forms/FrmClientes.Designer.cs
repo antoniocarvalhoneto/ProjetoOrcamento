@@ -104,7 +104,8 @@
             Controls.Add(btnCadastro);
             Controls.Add(txtContato);
             Name = "FrmClientes";
-            Text = "FrmClientes";
+            Text = "Gerenciamento de Clientes";
+            Load += Form_Load;
             ((System.ComponentModel.ISupportInitialize)dgvClientes).EndInit();
             ResumeLayout(false);
             PerformLayout();

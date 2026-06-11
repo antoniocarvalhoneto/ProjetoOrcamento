@@ -77,6 +77,7 @@
             btnCadastrarServico.TabIndex = 4;
             btnCadastrarServico.Text = "Cadastrar Servico";
             btnCadastrarServico.UseVisualStyleBackColor = true;
+            btnCadastrarServico.Click += btnCadastrarServico_Click;
             // 
             // dgvServicos
             // 
@@ -99,7 +100,7 @@
             Controls.Add(txtNomeServico);
             Controls.Add(label1);
             Name = "FrmServicoss";
-            Text = "FrmServicos";
+            Text = "Gerenciamento de Serviços";
             Load += FrmServicoss_Load;
             ((System.ComponentModel.ISupportInitialize)dgvServicos).EndInit();
             ResumeLayout(false);

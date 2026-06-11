@@ -31,6 +31,7 @@
             btnClientes = new Button();
             btnServicos = new Button();
             btnOrcamentos = new Button();
+            btnListarOrcamentos = new Button();
             label1 = new Label();
             SuspendLayout();
             // 
@@ -58,14 +59,25 @@
             // 
             // btnOrcamentos
             // 
-            btnOrcamentos.Location = new Point(839, 541);
+            btnOrcamentos.Location = new Point(750, 541);
             btnOrcamentos.Margin = new Padding(3, 4, 3, 4);
             btnOrcamentos.Name = "btnOrcamentos";
             btnOrcamentos.Size = new Size(130, 53);
             btnOrcamentos.TabIndex = 2;
-            btnOrcamentos.Text = "Orçamentos";
+            btnOrcamentos.Text = "Criar Orçamento";
             btnOrcamentos.UseVisualStyleBackColor = true;
             btnOrcamentos.Click += btnOrcamentos_Click;
+            // 
+            // btnListarOrcamentos
+            // 
+            btnListarOrcamentos.Location = new Point(900, 541);
+            btnListarOrcamentos.Margin = new Padding(3, 4, 3, 4);
+            btnListarOrcamentos.Name = "btnListarOrcamentos";
+            btnListarOrcamentos.Size = new Size(130, 53);
+            btnListarOrcamentos.TabIndex = 3;
+            btnListarOrcamentos.Text = "Listar Orçamentos";
+            btnListarOrcamentos.UseVisualStyleBackColor = true;
+            btnListarOrcamentos.Click += btnListarOrcamentos_Click;
             // 
             // label1
             // 
@@ -73,7 +85,7 @@
             label1.Location = new Point(467, 123);
             label1.Name = "label1";
             label1.Size = new Size(194, 20);
-            label1.TabIndex = 3;
+            label1.TabIndex = 4;
             label1.Text = "EMISSOR DE ORÇAMENTOS";
             // 
             // Form1
@@ -82,12 +94,13 @@
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1078, 677);
             Controls.Add(label1);
+            Controls.Add(btnListarOrcamentos);
             Controls.Add(btnOrcamentos);
             Controls.Add(btnServicos);
             Controls.Add(btnClientes);
             Margin = new Padding(3, 4, 3, 4);
             Name = "Form1";
-            Text = "Form1";
+            Text = "Sistema de Orçamentos";
             ResumeLayout(false);
             PerformLayout();
         }
@@ -98,6 +111,7 @@
         private Button btnClientes;
         private Button btnServicos;
         private Button btnOrcamentos;
+        private Button btnListarOrcamentos;
         private Label label1;
 
 
