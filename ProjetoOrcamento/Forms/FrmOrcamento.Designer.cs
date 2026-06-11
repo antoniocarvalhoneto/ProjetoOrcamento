@@ -1,6 +1,6 @@
 ﻿namespace ProjetoOrcamento.Forms
 {
-    partial class FrmServicos
+    partial class FrmOrcamento
     {
         /// <summary>
         /// Required designer variable.

@@ -28,18 +28,57 @@
         /// </summary>
         private void InitializeComponent()
         {
+            dgvOrcamentos = new DataGridView();
+            btnAprovar = new Button();
+            btnRejeitar = new Button();
+            ((System.ComponentModel.ISupportInitialize)dgvOrcamentos).BeginInit();
             SuspendLayout();
+            // 
+            // dgvOrcamentos
+            // 
+            dgvOrcamentos.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvOrcamentos.Location = new Point(68, 31);
+            dgvOrcamentos.Name = "dgvOrcamentos";
+            dgvOrcamentos.Size = new Size(240, 150);
+            dgvOrcamentos.TabIndex = 0;
+            // 
+            // btnAprovar
+            // 
+            btnAprovar.Location = new Point(68, 199);
+            btnAprovar.Name = "btnAprovar";
+            btnAprovar.Size = new Size(73, 35);
+            btnAprovar.TabIndex = 1;
+            btnAprovar.Text = "Aprovar";
+            btnAprovar.UseVisualStyleBackColor = true;
+            // 
+            // btnRejeitar
+            // 
+            btnRejeitar.Location = new Point(68, 240);
+            btnRejeitar.Name = "btnRejeitar";
+            btnRejeitar.Size = new Size(73, 37);
+            btnRejeitar.TabIndex = 2;
+            btnRejeitar.Text = "Rejeitar";
+            btnRejeitar.UseVisualStyleBackColor = true;
             // 
             // FrmListaOrcamentos
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(855, 488);
+            ClientSize = new Size(748, 366);
+            Controls.Add(btnRejeitar);
+            Controls.Add(btnAprovar);
+            Controls.Add(dgvOrcamentos);
+            Margin = new Padding(3, 2, 3, 2);
             Name = "FrmListaOrcamentos";
             Text = "FrmListaOrcamentos";
+            ((System.ComponentModel.ISupportInitialize)dgvOrcamentos).EndInit();
             ResumeLayout(false);
         }
 
         #endregion
+
+        private DataGridView dgvOrcamentos;
+        private Button btnAprovar;
+        private Button btnRejeitar;
     }
 }

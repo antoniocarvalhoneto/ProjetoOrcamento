@@ -8,11 +8,21 @@ using System.Windows.Forms;
 
 namespace ProjetoOrcamento.Forms
 {
-    public partial class FrmOrcamentos : Form
+    public partial class FrmOrcamento : Form
     {
-        public FrmOrcamentos()
+        public FrmOrcamento()
         {
             InitializeComponent();
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void FrmServicos_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }
