@@ -132,5 +132,10 @@ namespace ProjetoOrcamento.Forms
                 MessageBox.Show($"Erro ao criar orçamento: {ex.Message}", "Erro");
             }
         }
+
+        private void lstItens_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }

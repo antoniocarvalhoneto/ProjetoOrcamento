@@ -10,7 +10,7 @@ public class Orcamento
 
     public StatusOrcamento Status { get; private set; }
 
-    public int? NumeroPedido { get; private set; }
+    public int NumeroPedido { get; private set; }
 
     public string MotivoRejeicao { get; private set; }
 

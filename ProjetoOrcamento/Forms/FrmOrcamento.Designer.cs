@@ -44,7 +44,7 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(82, 35);
+            label1.Location = new Point(338, 25);
             label1.Name = "label1";
             label1.Size = new Size(62, 20);
             label1.TabIndex = 0;
@@ -54,7 +54,7 @@
             // cmbCliente
             // 
             cmbCliente.FormattingEnabled = true;
-            cmbCliente.Location = new Point(82, 58);
+            cmbCliente.Location = new Point(338, 55);
             cmbCliente.Name = "cmbCliente";
             cmbCliente.Size = new Size(151, 28);
             cmbCliente.TabIndex = 1;
@@ -62,7 +62,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(82, 100);
+            label2.Location = new Point(339, 86);
             label2.Name = "label2";
             label2.Size = new Size(64, 20);
             label2.TabIndex = 2;
@@ -71,7 +71,7 @@
             // cmbServico
             // 
             cmbServico.FormattingEnabled = true;
-            cmbServico.Location = new Point(82, 123);
+            cmbServico.Location = new Point(339, 109);
             cmbServico.Name = "cmbServico";
             cmbServico.Size = new Size(151, 28);
             cmbServico.TabIndex = 3;
@@ -79,7 +79,7 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(82, 154);
+            label3.Location = new Point(339, 140);
             label3.Name = "label3";
             label3.Size = new Size(94, 20);
             label3.TabIndex = 4;
@@ -87,14 +87,14 @@
             // 
             // nudQuantidade
             // 
-            nudQuantidade.Location = new Point(83, 177);
+            nudQuantidade.Location = new Point(339, 163);
             nudQuantidade.Name = "nudQuantidade";
             nudQuantidade.Size = new Size(150, 27);
             nudQuantidade.TabIndex = 5;
             // 
             // btnAdicionarItem
             // 
-            btnAdicionarItem.Location = new Point(83, 223);
+            btnAdicionarItem.Location = new Point(339, 210);
             btnAdicionarItem.Name = "btnAdicionarItem";
             btnAdicionarItem.Size = new Size(150, 29);
             btnAdicionarItem.TabIndex = 6;
@@ -114,14 +114,15 @@
             // lstItens
             // 
             lstItens.FormattingEnabled = true;
-            lstItens.Location = new Point(83, 273);
+            lstItens.Location = new Point(225, 266);
             lstItens.Name = "lstItens";
-            lstItens.Size = new Size(248, 104);
+            lstItens.Size = new Size(376, 164);
             lstItens.TabIndex = 8;
+            lstItens.SelectedIndexChanged += lstItens_SelectedIndexChanged;
             // 
             // btnCriarOrcamento
             // 
-            btnCriarOrcamento.Location = new Point(83, 383);
+            btnCriarOrcamento.Location = new Point(350, 438);
             btnCriarOrcamento.Name = "btnCriarOrcamento";
             btnCriarOrcamento.Size = new Size(130, 29);
             btnCriarOrcamento.TabIndex = 9;
@@ -129,7 +130,7 @@
             btnCriarOrcamento.UseVisualStyleBackColor = true;
             btnCriarOrcamento.Click += btnCriarOrcamento_Click;
             // 
-            // FrmServicos
+            // FrmOrcamento
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -144,7 +145,7 @@
             Controls.Add(label2);
             Controls.Add(cmbCliente);
             Controls.Add(label1);
-            Name = "FrmServicos";
+            Name = "FrmOrcamento";
             Text = "Criar Orçamento";
             Load += FrmServicos_Load;
             ((System.ComponentModel.ISupportInitialize)nudQuantidade).EndInit();

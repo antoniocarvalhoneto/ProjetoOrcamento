@@ -37,16 +37,19 @@
             // dgvOrcamentos
             // 
             dgvOrcamentos.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvOrcamentos.Location = new Point(68, 31);
+            dgvOrcamentos.Location = new Point(95, 55);
+            dgvOrcamentos.Margin = new Padding(3, 4, 3, 4);
             dgvOrcamentos.Name = "dgvOrcamentos";
-            dgvOrcamentos.Size = new Size(240, 150);
+            dgvOrcamentos.RowHeadersWidth = 51;
+            dgvOrcamentos.Size = new Size(647, 200);
             dgvOrcamentos.TabIndex = 0;
             // 
             // btnAprovar
             // 
-            btnAprovar.Location = new Point(68, 199);
+            btnAprovar.Location = new Point(330, 294);
+            btnAprovar.Margin = new Padding(3, 4, 3, 4);
             btnAprovar.Name = "btnAprovar";
-            btnAprovar.Size = new Size(73, 35);
+            btnAprovar.Size = new Size(175, 47);
             btnAprovar.TabIndex = 1;
             btnAprovar.Text = "Aprovar";
             btnAprovar.UseVisualStyleBackColor = true;
@@ -54,9 +57,10 @@
             // 
             // btnRejeitar
             // 
-            btnRejeitar.Location = new Point(68, 240);
+            btnRejeitar.Location = new Point(330, 367);
+            btnRejeitar.Margin = new Padding(3, 4, 3, 4);
             btnRejeitar.Name = "btnRejeitar";
-            btnRejeitar.Size = new Size(73, 37);
+            btnRejeitar.Size = new Size(175, 49);
             btnRejeitar.TabIndex = 2;
             btnRejeitar.Text = "Rejeitar";
             btnRejeitar.UseVisualStyleBackColor = true;
@@ -64,13 +68,12 @@
             // 
             // FrmListaOrcamentos
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(748, 366);
+            ClientSize = new Size(855, 488);
             Controls.Add(btnRejeitar);
             Controls.Add(btnAprovar);
             Controls.Add(dgvOrcamentos);
-            Margin = new Padding(3, 2, 3, 2);
             Name = "FrmListaOrcamentos";
             Text = "FrmListaOrcamentos";
             Load += Form_Load;
