@@ -69,7 +69,7 @@ namespace ProjetoOrcamento.Deita
             SalvarOrcamentos();
         }
 
-        internal static Orcamento ObterOrcamento(Guid id)
+        internal static Orcamento? ObterOrcamento(Guid id)
         {
             return _orcamentos.FirstOrDefault(o => o.Id == id);
         }
@@ -138,9 +138,7 @@ namespace ProjetoOrcamento.Deita
         {
             try
             {
-                var diretorio = Path.GetDirectoryName(_caminhoArquivo);
-                if (!Directory.Exists(diretorio))
-                    Directory.CreateDirectory(diretorio);
+                CriarDiretorioDoArquivo(_caminhoArquivo);
 
                 var opcoes = new JsonSerializerOptions { WriteIndented = true };
                 var json = JsonSerializer.Serialize(_orcamentos, opcoes);
@@ -158,9 +156,7 @@ namespace ProjetoOrcamento.Deita
         {
             try
             {
-                var diretorio = Path.GetDirectoryName(_caminhoClientes);
-                if (!Directory.Exists(diretorio))
-                    Directory.CreateDirectory(diretorio);
+                CriarDiretorioDoArquivo(_caminhoClientes);
 
                 var opcoes = new JsonSerializerOptions { WriteIndented = true };
                 var json = JsonSerializer.Serialize(_clientes, opcoes);
@@ -176,9 +172,7 @@ namespace ProjetoOrcamento.Deita
         {
             try
             {
-                var diretorio = Path.GetDirectoryName(_caminhoServicos);
-                if (!Directory.Exists(diretorio))
-                    Directory.CreateDirectory(diretorio);
+                CriarDiretorioDoArquivo(_caminhoServicos);
 
                 var opcoes = new JsonSerializerOptions { WriteIndented = true };
                 var json = JsonSerializer.Serialize(_servicos, opcoes);
@@ -203,6 +197,14 @@ namespace ProjetoOrcamento.Deita
             {
                 MessageBox.Show($"Erro ao carregar dados: {ex.Message}", "Erro");
             }
+        }
+
+        private static void CriarDiretorioDoArquivo(string caminhoArquivo)
+        {
+            var diretorio = Path.GetDirectoryName(caminhoArquivo);
+
+            if (!string.IsNullOrWhiteSpace(diretorio) && !Directory.Exists(diretorio))
+                Directory.CreateDirectory(diretorio);
         }
 
         private static void CarregarOrcamentos()

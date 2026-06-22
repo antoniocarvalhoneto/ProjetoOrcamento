@@ -1,7 +1,12 @@
-﻿public class Servico
+public class Servico
 {
-    public string Nome { get; set; }
+    public int Id { get; set; }
+    public string Nome { get; set; } = string.Empty;
     public decimal PrecoUnitario { get; set; }
+
+    public Servico()
+    {
+    }
 
     public Servico(string nome, decimal preco)
     {

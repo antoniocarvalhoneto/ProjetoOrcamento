@@ -1,6 +1,6 @@
 ﻿public class ItemOrcamento
 {
-    public Servico Servico { get; set; }
+    public Servico Servico { get; set; } = new();
 
     public int Quantidade { get; set; }
 

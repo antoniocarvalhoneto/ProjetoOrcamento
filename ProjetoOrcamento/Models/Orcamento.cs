@@ -1,18 +1,16 @@
-﻿using ProjetoOrcamento.Deita;
-
 public class Orcamento
 {
     public Guid Id { get; set; }
 
-    public Cliente Cliente { get; set; }
+    public Cliente? Cliente { get; set; }
 
     public List<ItemOrcamento> Itens { get; set; }
 
-    public StatusOrcamento Status { get; private set; }
+    public StatusOrcamento Status { get; set; }
 
-    public int NumeroPedido { get; private set; }
+    public int NumeroPedido { get; set; }
 
-    public string MotivoRejeicao { get; private set; }
+    public string MotivoRejeicao { get; set; } = string.Empty;
 
     public DateTime DataCriacao { get; set; }
 
@@ -36,14 +34,13 @@ public class Orcamento
         return total;
     }
 
-    public void Aprovar()
+    public void Aprovar(int numeroPedido)
     {
         if (Itens.Count == 0)
             throw new InvalidOperationException("Orçamento não pode ser aprovado sem itens.");
 
         Status = StatusOrcamento.Aprovado;
-        NumeroPedido = Dados.ProximoNumeroPedido;
-        Dados.ProximoNumeroPedido++;
+        NumeroPedido = numeroPedido;
     }
 
     public void Rejeitar(string motivo)
