@@ -1,111 +1,35 @@
 # Projeto Orçamento
 
-## 📋 Sobre o Projeto
+Aplicação desktop em C# e Windows Forms para cadastro de clientes, serviços e gerenciamento de orçamentos comerciais. O projeto foi modernizado para ter uma interface mais próxima de um ERP comercial, com organização em camadas, validações, pesquisa instantânea e persistência local em SQLite.
 
-O Projeto Orçamento é uma aplicação desktop desenvolvida em C# utilizando Windows Forms com o objetivo de gerenciar clientes, serviços e orçamentos de forma simples e intuitiva.
+## Visão Geral
 
-O sistema permite cadastrar clientes e serviços, criar orçamentos personalizados e acompanhar seu status, facilitando a organização e o controle de propostas comerciais.
+O sistema permite controlar o fluxo básico de orçamentos:
 
----
+- cadastrar e manter clientes;
+- cadastrar e manter serviços com preço unitário;
+- montar orçamentos por cliente, adicionando serviços e quantidades;
+- calcular totais automaticamente;
+- aprovar ou rejeitar orçamentos;
+- gerar número de pedido ao aprovar;
+- consultar orçamentos por texto e status.
 
-## 🎯 Objetivos
+## Tecnologias
 
-* Automatizar o processo de criação de orçamentos;
-* Centralizar informações de clientes e serviços;
-* Facilitar o cálculo de valores dos orçamentos;
-* Aplicar conceitos de Programação Orientada a Objetos (POO).
+- C#
+- .NET 10 (`net10.0-windows`)
+- Windows Forms
+- Microsoft.Data.Sqlite
+- SQLitePCLRaw
+- SQLite
 
----
+## Requisitos
 
-## ⚙️ Tecnologias Utilizadas
+- Windows
+- Visual Studio 2022 atualizado, com workload de desenvolvimento desktop .NET
+- .NET 10 SDK instalado
 
-* C#
-* .NET
-* Windows Forms
-* Programação Orientada a Objetos (POO)
-
----
-
-## 📁 Estrutura do Projeto
-
-```text
-ProjetoOrcamento
-│
-├── Models
-│   ├── Cliente.cs
-│   ├── Servico.cs
-│   ├── ItemOrcamento.cs
-│   ├── Orcamento.cs
-│   └── StatusOrcamento.cs
-│
-├── Forms
-│   ├── FrmClientes.cs
-│   ├── FrmServicos.cs
-│   ├── FrmOrcamento.cs
-│   └── FrmListaOrcamentos.cs
-│
-├── Form1.cs
-├── Program.cs
-└── ProjetoOrcamento.csproj
-```
-
----
-
-## 🚀 Funcionalidades
-
-### Cadastro de Clientes
-
-* Adicionar clientes;
-* Editar informações;
-* Remover clientes;
-* Consultar clientes cadastrados.
-
-### Cadastro de Serviços
-
-* Registrar serviços oferecidos;
-* Definir valores dos serviços;
-* Atualizar informações.
-
-### Gerenciamento de Orçamentos
-
-* Selecionar cliente;
-* Adicionar serviços ao orçamento;
-* Calcular valor total automaticamente;
-* Definir status do orçamento.
-
-### Consulta de Orçamentos
-
-* Visualizar todos os orçamentos criados;
-* Consultar informações detalhadas;
-* Acompanhar o status de cada orçamento.
-
----
-
-## 🏗️ Conceitos de POO Aplicados
-
-### Encapsulamento
-
-Os dados são organizados em classes com propriedades específicas.
-
-### Abstração
-
-Cada classe representa uma entidade real do sistema:
-
-* Cliente
-* Serviço
-* Item de Orçamento
-* Orçamento
-
-### Associação
-
-Um orçamento está associado a:
-
-* Um cliente;
-* Um ou mais serviços.
-
----
-
-## ▶️ Como Executar
+## Como Executar no Visual Studio
 
 1. Clone o repositório:
 
@@ -113,25 +37,186 @@ Um orçamento está associado a:
 git clone https://github.com/antoniocarvalhoneto/ProjetoOrcamento.git
 ```
 
-2. Abra a solução no Visual Studio.
+2. Abra a pasta do projeto:
 
-3. Compile o projeto.
+```bash
+cd ProjetoOrcamento
+```
 
-4. Execute a aplicação pressionando F5.
+3. Abra a solução `ProjetoOrcamento.sln` no Visual Studio.
 
----
+4. Restaure os pacotes NuGet, se o Visual Studio não fizer automaticamente.
 
-## 📚 Aprendizados
+5. Compile e execute com `F5`.
 
-Este projeto foi desenvolvido com foco na prática dos conceitos de:
+Também existe o arquivo `ProjetoOrcamento.slnx`, mas o `ProjetoOrcamento.sln` foi mantido para facilitar a abertura em versões tradicionais do Visual Studio.
 
-* Programação Orientada a Objetos;
-* Manipulação de formulários Windows Forms;
-* Organização em camadas (Models e Forms);
-* Estruturação de aplicações desktop em C#.
+## Como Executar pelo Terminal
 
----
+Na raiz do repositório:
 
-## 👨‍💻 Autor
+```powershell
+dotnet restore .\ProjetoOrcamento.sln
+dotnet build .\ProjetoOrcamento.sln
+dotnet run --project .\ProjetoOrcamento\ProjetoOrcamento.csproj
+```
+
+## Estrutura do Projeto
+
+```text
+ProjetoOrcamento
+|-- README.md
+|-- ProjetoOrcamento.sln
+|-- ProjetoOrcamento.slnx
+`-- ProjetoOrcamento
+    |-- Program.cs
+    |-- Form1.cs
+    |-- Forms
+    |   |-- FrmClientes.cs
+    |   |-- FrmServicoss.cs
+    |   |-- FrmOrcamento.cs
+    |   |-- FrmListaOrcamentos.cs
+    |   `-- ModernControls.cs
+    |-- Models
+    |   |-- Cliente.cs
+    |   |-- Servico.cs
+    |   |-- ItemOrcamento.cs
+    |   |-- Orcamento.cs
+    |   `-- StatusOrcamento.cs
+    |-- Services
+    |   |-- ClienteService.cs
+    |   |-- ServicoService.cs
+    |   `-- OrcamentoService.cs
+    `-- Repositories
+        |-- IClienteRepository.cs
+        |-- IServicoRepository.cs
+        |-- IOrcamentoRepository.cs
+        |-- SqliteDatabase.cs
+        |-- SqliteClienteRepository.cs
+        |-- SqliteServicoRepository.cs
+        `-- SqliteOrcamentoRepository.cs
+```
+
+## Arquitetura
+
+O projeto segue uma separação simples em camadas:
+
+```text
+Forms
+  -> Services
+      -> Repositories
+          -> SQLite
+```
+
+- `Forms`: telas WinForms, eventos de interface, feedback visual e interação com o usuário.
+- `Services`: regras de validação e coordenação das operações.
+- `Repositories`: acesso aos dados e comandos SQLite.
+- `Models`: entidades principais do domínio.
+
+## Funcionalidades Implementadas
+
+### Clientes
+
+- Cadastro, edição, exclusão e consulta.
+- Campos para nome, telefone, CPF, CEP, endereço e observações.
+- Máscaras para telefone, CPF e CEP.
+- Pesquisa instantânea.
+- Validação com mensagens amigáveis.
+
+### Serviços
+
+- Cadastro, edição, exclusão e consulta.
+- Controle de preço unitário.
+- Pesquisa por nome ou valor.
+- Validação de nome e preço maior que zero.
+
+### Orçamentos
+
+- Criação de orçamento por cliente.
+- Inclusão e remoção de itens.
+- Quantidade por item.
+- Cálculo automático de subtotal e total.
+- Persistência dos itens junto ao orçamento.
+
+### Lista de Orçamentos
+
+- Consulta geral dos orçamentos.
+- Filtro por texto e por status.
+- Aprovação de orçamentos pendentes.
+- Rejeição com motivo.
+- Geração automática do número de pedido na aprovação.
+
+## Interface
+
+A interface foi reformulada com:
+
+- cabeçalho superior moderno;
+- fonte Segoe UI;
+- paleta com azul principal, verde de sucesso, vermelho de exclusão e laranja de aviso;
+- botões com hover e cores por ação;
+- painéis arredondados;
+- DataGridView com cabeçalho destacado, linhas alternadas e seleção em linha inteira;
+- colunas de ação para editar, excluir ou remover;
+- tooltips nos controles principais;
+- labels de status e resumo;
+- atalhos de teclado.
+
+## Atalhos
+
+Atalhos disponíveis nas telas principais:
+
+- `Ctrl + S`: salvar ou criar registro.
+- `Ctrl + N`: limpar ou iniciar novo registro.
+- `Del`: excluir/remover item quando o grid está em foco.
+- `Esc`: cancelar edição ou fechar/cancelar operação.
+- `Ctrl + R` ou `F5`: atualizar a lista de orçamentos.
+
+## Persistência de Dados
+
+Os dados são armazenados em SQLite no perfil do usuário:
+
+```text
+%AppData%\ProjetoOrcamento\orcamentos.db
+```
+
+Na primeira execução, o banco é criado automaticamente. Caso existam dados legados carregados pela classe `Dados`, eles são migrados para o SQLite quando o banco ainda está vazio.
+
+## Solução de Problemas
+
+### O build falha dizendo que o `.exe` está sendo usado
+
+Esse erro acontece quando a aplicação ainda está aberta. Feche a janela do programa e compile novamente.
+
+Se precisar encerrar pelo terminal:
+
+```powershell
+Get-Process -Name ProjetoOrcamento -ErrorAction SilentlyContinue | Stop-Process -Force
+dotnet build .\ProjetoOrcamento.sln
+```
+
+### O Visual Studio não abre o projeto corretamente
+
+Abra o arquivo `ProjetoOrcamento.sln`, não apenas a pasta. Depois execute restore/build pelo próprio Visual Studio.
+
+### Pacotes NuGet não restauram
+
+Execute:
+
+```powershell
+dotnet restore .\ProjetoOrcamento.sln
+```
+
+## Validação
+
+Comandos usados para validar o projeto:
+
+```bash
+dotnet build .\ProjetoOrcamento.sln
+dotnet list .\ProjetoOrcamento\ProjetoOrcamento.csproj package --vulnerable --include-transitive
+```
+
+O build atual compila sem avisos e sem erros.
+
+## Autor
 
 Antonio da Silva Freire de Carvalho Neto
