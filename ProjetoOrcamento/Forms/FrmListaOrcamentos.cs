@@ -13,19 +13,22 @@ namespace ProjetoOrcamento.Forms
         private readonly Color _cinzaTexto = ColorTranslator.FromHtml("#374151");
         private readonly Color _sucesso = ColorTranslator.FromHtml("#16A34A");
         private readonly OrcamentoService _orcamentoService = new();
+        private readonly Usuario _usuarioLogado;
 
-        public FrmListaOrcamentos()
+        public FrmListaOrcamentos(Usuario usuarioLogado)
         {
+            _usuarioLogado = usuarioLogado;
             InitializeComponent();
             ConfigurarFormulario();
             ConfigurarDataGridView();
             ConfigurarFiltroStatus();
             ConfigurarToolTips();
+            AplicarPermissoes();
         }
 
         private void ConfigurarFormulario()
         {
-            lblUsuario.Text = $"Usuário: {Environment.UserName}";
+            lblUsuario.Text = $"Usuário: {_usuarioLogado.Nome} ({_usuarioLogado.Papel.Nome})";
             AtualizarRelogio();
 
             tmrRelogio.Interval = 1000;
@@ -131,6 +134,16 @@ namespace ProjetoOrcamento.Forms
             toolTip.SetToolTip(btnFechar, "Fechar esta tela. Atalho: Esc.");
         }
 
+        private void AplicarPermissoes()
+        {
+            var podeAlterar = _usuarioLogado.PodeAlterarDados;
+            btnAprovar.Enabled = podeAlterar;
+            btnRejeitar.Enabled = podeAlterar;
+
+            if (!podeAlterar)
+                DefinirStatus("Perfil Visualizador: consulta liberada, aprovação e rejeição bloqueadas.", _cinzaTexto);
+        }
+
         private void Form_Load(object sender, EventArgs e)
         {
             CarregarOrcamentos();
@@ -194,6 +207,9 @@ namespace ProjetoOrcamento.Forms
 
         private void btnAprovar_Click(object sender, EventArgs e)
         {
+            if (!ValidarPermissaoAlteracao("aprovar orçamentos"))
+                return;
+
             try
             {
                 var orcamento = ObterOrcamentoSelecionado("aprovar");
@@ -201,7 +217,7 @@ namespace ProjetoOrcamento.Forms
                 if (orcamento == null)
                     return;
 
-                _orcamentoService.Aprovar(orcamento);
+                _orcamentoService.Aprovar(orcamento, _usuarioLogado);
 
                 MessageBox.Show(
                     $"Orçamento aprovado com sucesso!\nNº do Pedido: {orcamento.NumeroPedido}",
@@ -217,6 +233,11 @@ namespace ProjetoOrcamento.Forms
                 MessageBox.Show(ex.Message, "Validação", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 DefinirStatus(ex.Message, ColorTranslator.FromHtml("#DC2626"));
             }
+            catch (UnauthorizedAccessException ex)
+            {
+                MessageBox.Show(ex.Message, "Acesso negado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                DefinirStatus(ex.Message, ColorTranslator.FromHtml("#DC2626"));
+            }
             catch (Exception ex)
             {
                 ExibirErro("Erro ao aprovar orçamento. Tente novamente.", ex);
@@ -225,6 +246,9 @@ namespace ProjetoOrcamento.Forms
 
         private void btnRejeitar_Click(object sender, EventArgs e)
         {
+            if (!ValidarPermissaoAlteracao("rejeitar orçamentos"))
+                return;
+
             try
             {
                 var orcamento = ObterOrcamentoSelecionado("rejeitar");
@@ -237,7 +261,7 @@ namespace ProjetoOrcamento.Forms
                 if (motivo == null)
                     return;
 
-                _orcamentoService.Rejeitar(orcamento, motivo);
+                _orcamentoService.Rejeitar(orcamento, motivo, _usuarioLogado);
 
                 MessageBox.Show("Orçamento rejeitado com sucesso.", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 DefinirStatus("Orçamento rejeitado com sucesso.", _sucesso);
@@ -246,6 +270,11 @@ namespace ProjetoOrcamento.Forms
             catch (InvalidOperationException ex)
             {
                 MessageBox.Show(ex.Message, "Validação", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                DefinirStatus(ex.Message, ColorTranslator.FromHtml("#DC2626"));
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                MessageBox.Show(ex.Message, "Acesso negado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 DefinirStatus(ex.Message, ColorTranslator.FromHtml("#DC2626"));
             }
             catch (Exception ex)
@@ -405,6 +434,17 @@ namespace ProjetoOrcamento.Forms
         {
             DefinirStatus(mensagemAmigavel, ColorTranslator.FromHtml("#DC2626"));
             MessageBox.Show($"{mensagemAmigavel}\n\nDetalhes: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
+        private bool ValidarPermissaoAlteracao(string acao)
+        {
+            if (_usuarioLogado.PodeAlterarDados)
+                return true;
+
+            var mensagem = $"Seu perfil não permite {acao}.";
+            DefinirStatus(mensagem, ColorTranslator.FromHtml("#DC2626"));
+            MessageBox.Show(mensagem, "Acesso negado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return false;
         }
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)

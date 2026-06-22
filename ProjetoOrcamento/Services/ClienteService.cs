@@ -40,8 +40,9 @@ namespace ProjetoOrcamento.Services
                 .ToList();
         }
 
-        public void Salvar(Cliente cliente, int indexEmEdicao)
+        public void Salvar(Cliente cliente, int indexEmEdicao, Usuario solicitante)
         {
+            AutorizacaoService.ExigirAlteracao(solicitante, "salvar clientes");
             Validar(cliente);
 
             if (indexEmEdicao >= 0)
@@ -53,8 +54,10 @@ namespace ProjetoOrcamento.Services
             _repository.Adicionar(cliente);
         }
 
-        public void Remover(Cliente cliente)
+        public void Remover(Cliente cliente, Usuario solicitante)
         {
+            AutorizacaoService.ExigirAlteracao(solicitante, "excluir clientes");
+
             var index = _repository.ObterIndex(cliente);
 
             if (index >= 0)

@@ -103,6 +103,24 @@ namespace ProjetoOrcamento.Repositories
                     Chave TEXT PRIMARY KEY,
                     Valor TEXT NOT NULL
                 );
+
+                CREATE TABLE IF NOT EXISTS Papeis (
+                    Id INTEGER PRIMARY KEY,
+                    Nome TEXT NOT NULL UNIQUE
+                );
+
+                CREATE TABLE IF NOT EXISTS Usuarios (
+                    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    Nome TEXT NOT NULL,
+                    Login TEXT NOT NULL UNIQUE,
+                    SenhaHash TEXT NOT NULL,
+                    PapelId INTEGER NOT NULL,
+                    FOREIGN KEY (PapelId) REFERENCES Papeis(Id)
+                );
+
+                INSERT OR IGNORE INTO Papeis (Id, Nome) VALUES (1, 'Admin');
+                INSERT OR IGNORE INTO Papeis (Id, Nome) VALUES (2, 'Operador');
+                INSERT OR IGNORE INTO Papeis (Id, Nome) VALUES (3, 'Visualizador');
                 """;
             command.ExecuteNonQuery();
         }

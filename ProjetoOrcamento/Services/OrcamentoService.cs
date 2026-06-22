@@ -48,8 +48,10 @@ namespace ProjetoOrcamento.Services
             return _repository.ObterPorId(id);
         }
 
-        public void Criar(Orcamento orcamento)
+        public void Criar(Orcamento orcamento, Usuario solicitante)
         {
+            AutorizacaoService.ExigirAlteracao(solicitante, "criar orçamentos");
+
             if (orcamento.Cliente == null)
                 throw new InvalidOperationException("Selecione um cliente.");
 
@@ -59,8 +61,10 @@ namespace ProjetoOrcamento.Services
             _repository.Adicionar(orcamento);
         }
 
-        public void Aprovar(Orcamento orcamento)
+        public void Aprovar(Orcamento orcamento, Usuario solicitante)
         {
+            AutorizacaoService.ExigirAlteracao(solicitante, "aprovar orçamentos");
+
             if (orcamento.Status != StatusOrcamento.Pendente)
                 throw new InvalidOperationException($"Orçamento já foi {orcamento.Status.ToString().ToLower()}.");
 
@@ -70,8 +74,10 @@ namespace ProjetoOrcamento.Services
             _repository.AtualizarProximoNumeroPedido(proximoNumeroPedido + 1);
         }
 
-        public void Rejeitar(Orcamento orcamento, string motivo)
+        public void Rejeitar(Orcamento orcamento, string motivo, Usuario solicitante)
         {
+            AutorizacaoService.ExigirAlteracao(solicitante, "rejeitar orçamentos");
+
             if (orcamento.Status != StatusOrcamento.Pendente)
                 throw new InvalidOperationException($"Orçamento já foi {orcamento.Status.ToString().ToLower()}.");
 

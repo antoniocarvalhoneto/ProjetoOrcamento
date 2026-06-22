@@ -15,21 +15,24 @@ namespace ProjetoOrcamento.Forms
         private readonly Color _erroCampo = ColorTranslator.FromHtml("#FEF2F2");
         private readonly Color _sucesso = ColorTranslator.FromHtml("#16A34A");
         private readonly ClienteService _clienteService = new();
+        private readonly Usuario _usuarioLogado;
 
         private int _clienteEmEdicaoIndex = -1;
 
-        public FrmClientes()
+        public FrmClientes(Usuario usuarioLogado)
         {
+            _usuarioLogado = usuarioLogado;
             InitializeComponent();
             ConfigurarFormulario();
             ConfigurarDataGridView();
             ConfigurarToolTips();
+            AplicarPermissoes();
             DefinirModoEdicao(false);
         }
 
         private void ConfigurarFormulario()
         {
-            lblUsuario.Text = $"Usuário: {Environment.UserName}";
+            lblUsuario.Text = $"Usuário: {_usuarioLogado.Nome} ({_usuarioLogado.Papel.Nome})";
             AtualizarRelogio();
 
             tmrRelogio.Interval = 1000;
@@ -120,6 +123,32 @@ namespace ProjetoOrcamento.Forms
             dgvClientes.Columns["btnDeletar"]!.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
         }
 
+        private void AplicarPermissoes()
+        {
+            var podeAlterar = _usuarioLogado.PodeAlterarDados;
+
+            btnSalvar.Enabled = podeAlterar;
+            btnEditar.Enabled = podeAlterar;
+            btnExcluir.Enabled = podeAlterar;
+            btnLimpar.Enabled = podeAlterar;
+            btnCancelar.Enabled = false;
+            txtNome.Enabled = podeAlterar;
+            txtTelefone.Enabled = podeAlterar;
+            txtCpf.Enabled = podeAlterar;
+            txtCep.Enabled = podeAlterar;
+            txtEndereco.Enabled = podeAlterar;
+            txtObservacoes.Enabled = podeAlterar;
+
+            if (dgvClientes.Columns.Contains("btnEditarGrid"))
+                dgvClientes.Columns["btnEditarGrid"]!.Visible = podeAlterar;
+
+            if (dgvClientes.Columns.Contains("btnDeletar"))
+                dgvClientes.Columns["btnDeletar"]!.Visible = podeAlterar;
+
+            if (!podeAlterar)
+                DefinirStatus("Perfil Visualizador: consulta liberada, alterações bloqueadas.", _cinzaTexto);
+        }
+
         private void ConfigurarToolTips()
         {
             toolTip.SetToolTip(txtNome, "Informe o nome do cliente.");
@@ -182,6 +211,9 @@ namespace ProjetoOrcamento.Forms
 
         private void SalvarRegistro()
         {
+            if (!ValidarPermissaoAlteracao("salvar clientes"))
+                return;
+
             try
             {
                 if (!ValidarCampos())
@@ -191,13 +223,13 @@ namespace ProjetoOrcamento.Forms
 
                 if (_clienteEmEdicaoIndex >= 0)
                 {
-                    _clienteService.Salvar(cliente, _clienteEmEdicaoIndex);
+                    _clienteService.Salvar(cliente, _clienteEmEdicaoIndex, _usuarioLogado);
                     DefinirStatus("Registro atualizado com sucesso.", _sucesso);
                     MessageBox.Show("Registro atualizado com sucesso.", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
                 {
-                    _clienteService.Salvar(cliente, _clienteEmEdicaoIndex);
+                    _clienteService.Salvar(cliente, _clienteEmEdicaoIndex, _usuarioLogado);
                     DefinirStatus("Registro salvo com sucesso.", _sucesso);
                     MessageBox.Show("Registro salvo com sucesso.", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
@@ -208,6 +240,11 @@ namespace ProjetoOrcamento.Forms
             catch (InvalidOperationException ex)
             {
                 MessageBox.Show(ex.Message, "Validação", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                DefinirStatus(ex.Message, ColorTranslator.FromHtml("#DC2626"));
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                MessageBox.Show(ex.Message, "Acesso negado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 DefinirStatus(ex.Message, ColorTranslator.FromHtml("#DC2626"));
             }
             catch (Exception ex)
@@ -309,6 +346,9 @@ namespace ProjetoOrcamento.Forms
 
         private void EditarClienteSelecionado()
         {
+            if (!ValidarPermissaoAlteracao("editar clientes"))
+                return;
+
             var cliente = ObterClienteSelecionado();
 
             if (cliente == null)
@@ -322,6 +362,9 @@ namespace ProjetoOrcamento.Forms
 
         private void SelecionarClienteParaEdicao(Cliente cliente)
         {
+            if (!ValidarPermissaoAlteracao("editar clientes"))
+                return;
+
             var index = _clienteService.ObterIndex(cliente);
 
             if (index < 0)
@@ -344,6 +387,9 @@ namespace ProjetoOrcamento.Forms
 
         private void ExcluirClienteSelecionado()
         {
+            if (!ValidarPermissaoAlteracao("excluir clientes"))
+                return;
+
             var cliente = ObterClienteSelecionado();
 
             if (cliente == null)
@@ -357,6 +403,9 @@ namespace ProjetoOrcamento.Forms
 
         private void ExcluirCliente(Cliente cliente)
         {
+            if (!ValidarPermissaoAlteracao("excluir clientes"))
+                return;
+
             try
             {
                 var index = _clienteService.ObterIndex(cliente);
@@ -377,7 +426,7 @@ namespace ProjetoOrcamento.Forms
                 if (confirmacao != DialogResult.Yes)
                     return;
 
-                _clienteService.Remover(cliente);
+                _clienteService.Remover(cliente, _usuarioLogado);
 
                 if (_clienteEmEdicaoIndex == index)
                     LimparCampos();
@@ -402,6 +451,9 @@ namespace ProjetoOrcamento.Forms
 
         private void LimparCampos()
         {
+            if (!_usuarioLogado.PodeAlterarDados)
+                return;
+
             _clienteEmEdicaoIndex = -1;
 
             txtNome.Clear();
@@ -425,6 +477,13 @@ namespace ProjetoOrcamento.Forms
 
         private void DefinirModoEdicao(bool editando)
         {
+            if (!_usuarioLogado.PodeAlterarDados)
+            {
+                btnSalvar.Text = "💾 Salvar";
+                btnCancelar.Enabled = false;
+                return;
+            }
+
             btnSalvar.Text = editando ? "💾 Atualizar" : "💾 Salvar";
             btnCancelar.Enabled = editando;
             lblStatus.Text = editando ? "Editando registro selecionado." : "Pronto.";
@@ -471,6 +530,17 @@ namespace ProjetoOrcamento.Forms
         {
             DefinirStatus(mensagemAmigavel, ColorTranslator.FromHtml("#DC2626"));
             MessageBox.Show($"{mensagemAmigavel}\n\nDetalhes: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
+        private bool ValidarPermissaoAlteracao(string acao)
+        {
+            if (_usuarioLogado.PodeAlterarDados)
+                return true;
+
+            var mensagem = $"Seu perfil não permite {acao}.";
+            DefinirStatus(mensagem, ColorTranslator.FromHtml("#DC2626"));
+            MessageBox.Show(mensagem, "Acesso negado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return false;
         }
 
         private void Campo_TextChanged(object? sender, EventArgs e)

@@ -54,6 +54,7 @@ namespace ProjetoOrcamento
             btnServicos = new ModernButton();
             btnOrcamentos = new ModernButton();
             btnListarOrcamentos = new ModernButton();
+            btnUsuarios = new ModernButton();
             picLogoRodape = new PictureBox();
             tmrRelogio = new System.Windows.Forms.Timer(components);
             pnlHeader.SuspendLayout();
@@ -421,6 +422,7 @@ namespace ProjetoOrcamento
             fluxoModulos.Controls.Add(btnServicos);
             fluxoModulos.Controls.Add(btnOrcamentos);
             fluxoModulos.Controls.Add(btnListarOrcamentos);
+            fluxoModulos.Controls.Add(btnUsuarios);
             fluxoModulos.Controls.Add(picLogoRodape);
             fluxoModulos.Dock = DockStyle.Fill;
             fluxoModulos.Location = new Point(0, 38);
@@ -437,7 +439,7 @@ namespace ProjetoOrcamento
             btnClientes.Name = "btnClientes";
             btnClientes.NormalBackColor = ColorTranslator.FromHtml("#2563EB");
             btnClientes.PressedBackColor = ColorTranslator.FromHtml("#1E40AF");
-            btnClientes.Size = new Size(220, 74);
+            btnClientes.Size = new Size(200, 74);
             btnClientes.TabIndex = 0;
             btnClientes.Text = "👤 Clientes";
             btnClientes.Click += btnClientes_Click;
@@ -445,12 +447,12 @@ namespace ProjetoOrcamento
             // btnServicos
             // 
             btnServicos.HoverBackColor = ColorTranslator.FromHtml("#1D4ED8");
-            btnServicos.Location = new Point(234, 12);
+            btnServicos.Location = new Point(214, 12);
             btnServicos.Margin = new Padding(0, 12, 14, 12);
             btnServicos.Name = "btnServicos";
             btnServicos.NormalBackColor = ColorTranslator.FromHtml("#2563EB");
             btnServicos.PressedBackColor = ColorTranslator.FromHtml("#1E40AF");
-            btnServicos.Size = new Size(220, 74);
+            btnServicos.Size = new Size(200, 74);
             btnServicos.TabIndex = 1;
             btnServicos.Text = "🧾 Serviços";
             btnServicos.Click += btnServicos_Click;
@@ -458,12 +460,12 @@ namespace ProjetoOrcamento
             // btnOrcamentos
             // 
             btnOrcamentos.HoverBackColor = ColorTranslator.FromHtml("#15803D");
-            btnOrcamentos.Location = new Point(468, 12);
+            btnOrcamentos.Location = new Point(428, 12);
             btnOrcamentos.Margin = new Padding(0, 12, 14, 12);
             btnOrcamentos.Name = "btnOrcamentos";
             btnOrcamentos.NormalBackColor = ColorTranslator.FromHtml("#16A34A");
             btnOrcamentos.PressedBackColor = ColorTranslator.FromHtml("#166534");
-            btnOrcamentos.Size = new Size(220, 74);
+            btnOrcamentos.Size = new Size(200, 74);
             btnOrcamentos.TabIndex = 2;
             btnOrcamentos.Text = "➕ Criar orçamento";
             btnOrcamentos.Click += btnOrcamentos_Click;
@@ -471,25 +473,39 @@ namespace ProjetoOrcamento
             // btnListarOrcamentos
             // 
             btnListarOrcamentos.HoverBackColor = ColorTranslator.FromHtml("#1D4ED8");
-            btnListarOrcamentos.Location = new Point(702, 12);
+            btnListarOrcamentos.Location = new Point(642, 12);
             btnListarOrcamentos.Margin = new Padding(0, 12, 14, 12);
             btnListarOrcamentos.Name = "btnListarOrcamentos";
             btnListarOrcamentos.NormalBackColor = ColorTranslator.FromHtml("#1E3A8A");
             btnListarOrcamentos.PressedBackColor = ColorTranslator.FromHtml("#1E40AF");
-            btnListarOrcamentos.Size = new Size(220, 74);
+            btnListarOrcamentos.Size = new Size(200, 74);
             btnListarOrcamentos.TabIndex = 3;
             btnListarOrcamentos.Text = "📋 Orçamentos";
             btnListarOrcamentos.Click += btnListarOrcamentos_Click;
-            // 
+            //
+            // btnUsuarios
+            //
+            btnUsuarios.HoverBackColor = ColorTranslator.FromHtml("#7C3AED");
+            btnUsuarios.Location = new Point(856, 12);
+            btnUsuarios.Margin = new Padding(0, 12, 14, 12);
+            btnUsuarios.Name = "btnUsuarios";
+            btnUsuarios.NormalBackColor = ColorTranslator.FromHtml("#6D28D9");
+            btnUsuarios.PressedBackColor = ColorTranslator.FromHtml("#5B21B6");
+            btnUsuarios.Size = new Size(200, 74);
+            btnUsuarios.TabIndex = 4;
+            btnUsuarios.Text = "🔐 Usuários";
+            btnUsuarios.Visible = false;
+            btnUsuarios.Click += btnUsuarios_Click;
+            //
             // picLogoRodape
             // 
             picLogoRodape.Image = Properties.Resources.ChatGPT_Image_12_de_jun__de_2026__10_26_21;
-            picLogoRodape.Location = new Point(936, 12);
+            picLogoRodape.Location = new Point(856, 12);
             picLogoRodape.Margin = new Padding(0, 12, 0, 12);
             picLogoRodape.Name = "picLogoRodape";
             picLogoRodape.Size = new Size(134, 74);
             picLogoRodape.SizeMode = PictureBoxSizeMode.Zoom;
-            picLogoRodape.TabIndex = 4;
+            picLogoRodape.TabIndex = 5;
             picLogoRodape.TabStop = false;
             // 
             // Form1
@@ -560,6 +576,7 @@ namespace ProjetoOrcamento
         private ModernButton btnServicos = null!;
         private ModernButton btnOrcamentos = null!;
         private ModernButton btnListarOrcamentos = null!;
+        private ModernButton btnUsuarios = null!;
         private PictureBox picLogoRodape = null!;
         private System.Windows.Forms.Timer tmrRelogio = null!;
     }

@@ -1,4 +1,5 @@
 using ProjetoOrcamento.Forms;
+using ProjetoOrcamento.Services;
 
 namespace ProjetoOrcamento
 {
@@ -10,10 +11,34 @@ namespace ProjetoOrcamento
         [STAThread]
         static void Main()
         {
-            // To customize application configuration such as set high DPI settings or default font,
-            // see https://aka.ms/applicationconfiguration.
-            ApplicationConfiguration.Initialize();
-            Application.Run(new Form1());
+            try
+            {
+                ApplicationConfiguration.Initialize();
+
+                var usuarioService = new UsuarioService();
+
+                if (usuarioService.GarantirAdminPadrao())
+                {
+                    MessageBox.Show(
+                        "Primeiro acesso detectado.\n\nUsuário: admin\nSenha: 1234\n\nAltere a senha ou crie novos usuários em Gerenciar Usuários.",
+                        "Bem-vindo",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+                }
+
+                using var login = new FrmLogin();
+
+                if (login.ShowDialog() == DialogResult.OK && login.UsuarioLogado != null)
+                    Application.Run(new Form1(login.UsuarioLogado));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    $"Erro ao iniciar o sistema.\n\nDetalhes: {ex.Message}",
+                    "Erro",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
         }
     }
 }

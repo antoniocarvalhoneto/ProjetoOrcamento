@@ -15,21 +15,24 @@ namespace ProjetoOrcamento.Forms
         private readonly Color _erroCampo = ColorTranslator.FromHtml("#FEF2F2");
         private readonly Color _sucesso = ColorTranslator.FromHtml("#16A34A");
         private readonly ServicoService _servicoService = new();
+        private readonly Usuario _usuarioLogado;
 
         private int _servicoEmEdicaoIndex = -1;
 
-        public FrmServicoss()
+        public FrmServicoss(Usuario usuarioLogado)
         {
+            _usuarioLogado = usuarioLogado;
             InitializeComponent();
             ConfigurarFormulario();
             ConfigurarDataGridView();
             ConfigurarToolTips();
+            AplicarPermissoes();
             DefinirModoEdicao(false);
         }
 
         private void ConfigurarFormulario()
         {
-            lblUsuario.Text = $"Usuário: {Environment.UserName}";
+            lblUsuario.Text = $"Usuário: {_usuarioLogado.Nome} ({_usuarioLogado.Papel.Nome})";
             AtualizarRelogio();
 
             tmrRelogio.Interval = 1000;
@@ -101,6 +104,28 @@ namespace ProjetoOrcamento.Forms
             dgvServicos.Columns["btnDeletar"]!.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
         }
 
+        private void AplicarPermissoes()
+        {
+            var podeAlterar = _usuarioLogado.PodeAlterarDados;
+
+            btnCadastrarServico.Enabled = podeAlterar;
+            btnEditar.Enabled = podeAlterar;
+            btnExcluir.Enabled = podeAlterar;
+            btnLimpar.Enabled = podeAlterar;
+            btnCancelar.Enabled = false;
+            txtNomeServico.Enabled = podeAlterar;
+            txtPreco.Enabled = podeAlterar;
+
+            if (dgvServicos.Columns.Contains("btnEditarGrid"))
+                dgvServicos.Columns["btnEditarGrid"]!.Visible = podeAlterar;
+
+            if (dgvServicos.Columns.Contains("btnDeletar"))
+                dgvServicos.Columns["btnDeletar"]!.Visible = podeAlterar;
+
+            if (!podeAlterar)
+                DefinirStatus("Perfil Visualizador: consulta liberada, alterações bloqueadas.", _cinzaTexto);
+        }
+
         private void ConfigurarToolTips()
         {
             toolTip.SetToolTip(txtNomeServico, "Informe o nome do serviço.");
@@ -143,13 +168,16 @@ namespace ProjetoOrcamento.Forms
 
         private void SalvarRegistro()
         {
+            if (!ValidarPermissaoAlteracao("salvar serviços"))
+                return;
+
             try
             {
                 if (!ValidarCampos())
                     return;
 
                 var servico = MontarObjeto();
-                _servicoService.Salvar(servico, _servicoEmEdicaoIndex);
+                _servicoService.Salvar(servico, _servicoEmEdicaoIndex, _usuarioLogado);
 
                 var mensagem = _servicoEmEdicaoIndex >= 0
                     ? "Registro atualizado com sucesso."
@@ -164,6 +192,11 @@ namespace ProjetoOrcamento.Forms
             catch (InvalidOperationException ex)
             {
                 MessageBox.Show(ex.Message, "Validação", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                DefinirStatus(ex.Message, ColorTranslator.FromHtml("#DC2626"));
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                MessageBox.Show(ex.Message, "Acesso negado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 DefinirStatus(ex.Message, ColorTranslator.FromHtml("#DC2626"));
             }
             catch (Exception ex)
@@ -231,6 +264,9 @@ namespace ProjetoOrcamento.Forms
 
         private void EditarServicoSelecionado()
         {
+            if (!ValidarPermissaoAlteracao("editar serviços"))
+                return;
+
             var servico = ObterServicoSelecionado();
 
             if (servico == null)
@@ -244,6 +280,9 @@ namespace ProjetoOrcamento.Forms
 
         private void SelecionarServicoParaEdicao(Servico servico)
         {
+            if (!ValidarPermissaoAlteracao("editar serviços"))
+                return;
+
             var index = _servicoService.ObterIndex(servico);
 
             if (index < 0)
@@ -262,6 +301,9 @@ namespace ProjetoOrcamento.Forms
 
         private void ExcluirServicoSelecionado()
         {
+            if (!ValidarPermissaoAlteracao("excluir serviços"))
+                return;
+
             var servico = ObterServicoSelecionado();
 
             if (servico == null)
@@ -275,6 +317,9 @@ namespace ProjetoOrcamento.Forms
 
         private void ExcluirServico(Servico servico)
         {
+            if (!ValidarPermissaoAlteracao("excluir serviços"))
+                return;
+
             try
             {
                 var confirmacao = MessageBox.Show(
@@ -287,7 +332,7 @@ namespace ProjetoOrcamento.Forms
                 if (confirmacao != DialogResult.Yes)
                     return;
 
-                _servicoService.Remover(servico);
+                _servicoService.Remover(servico, _usuarioLogado);
                 LimparCampos();
                 CarregarServicos();
 
@@ -307,6 +352,9 @@ namespace ProjetoOrcamento.Forms
 
         private void LimparCampos()
         {
+            if (!_usuarioLogado.PodeAlterarDados)
+                return;
+
             _servicoEmEdicaoIndex = -1;
             txtNomeServico.Clear();
             txtPreco.Clear();
@@ -325,6 +373,13 @@ namespace ProjetoOrcamento.Forms
 
         private void DefinirModoEdicao(bool editando)
         {
+            if (!_usuarioLogado.PodeAlterarDados)
+            {
+                btnCadastrarServico.Text = "💾 Salvar";
+                btnCancelar.Enabled = false;
+                return;
+            }
+
             btnCadastrarServico.Text = editando ? "💾 Atualizar" : "💾 Salvar";
             btnCancelar.Enabled = editando;
             lblStatus.Text = editando ? "Editando registro selecionado." : "Pronto.";
@@ -362,6 +417,17 @@ namespace ProjetoOrcamento.Forms
         {
             DefinirStatus(mensagemAmigavel, ColorTranslator.FromHtml("#DC2626"));
             MessageBox.Show($"{mensagemAmigavel}\n\nDetalhes: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
+        private bool ValidarPermissaoAlteracao(string acao)
+        {
+            if (_usuarioLogado.PodeAlterarDados)
+                return true;
+
+            var mensagem = $"Seu perfil não permite {acao}.";
+            DefinirStatus(mensagem, ColorTranslator.FromHtml("#DC2626"));
+            MessageBox.Show(mensagem, "Acesso negado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return false;
         }
 
         private void Campo_TextChanged(object? sender, EventArgs e)

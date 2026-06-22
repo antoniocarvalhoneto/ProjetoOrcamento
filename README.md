@@ -1,6 +1,6 @@
 # Projeto Orçamento
 
-Aplicação desktop em C# e Windows Forms para cadastro de clientes, serviços e gerenciamento de orçamentos comerciais. O projeto foi modernizado para ter uma interface mais próxima de um ERP comercial, com organização em camadas, validações, pesquisa instantânea e persistência local em SQLite.
+Aplicação desktop em C# e Windows Forms para cadastro de clientes, serviços e gerenciamento de orçamentos comerciais. O projeto foi modernizado para ter uma interface mais próxima de um ERP comercial, com organização em camadas, validações, pesquisa instantânea, autenticação obrigatória, RBAC e persistência local em SQLite.
 
 ## Visão Geral
 
@@ -13,6 +13,7 @@ O sistema permite controlar o fluxo básico de orçamentos:
 - aprovar ou rejeitar orçamentos;
 - gerar número de pedido ao aprovar;
 - consultar orçamentos por texto e status.
+- controlar acesso por usuário e papel.
 
 ## Tecnologias
 
@@ -72,6 +73,8 @@ ProjetoOrcamento
     |-- Program.cs
     |-- Form1.cs
     |-- Forms
+    |   |-- FrmLogin.cs
+    |   |-- FrmUsuarios.cs
     |   |-- FrmClientes.cs
     |   |-- FrmServicoss.cs
     |   |-- FrmOrcamento.cs
@@ -82,19 +85,26 @@ ProjetoOrcamento
     |   |-- Servico.cs
     |   |-- ItemOrcamento.cs
     |   |-- Orcamento.cs
-    |   `-- StatusOrcamento.cs
+    |   |-- StatusOrcamento.cs
+    |   |-- Usuario.cs
+    |   `-- Papel.cs
     |-- Services
     |   |-- ClienteService.cs
     |   |-- ServicoService.cs
-    |   `-- OrcamentoService.cs
+    |   |-- OrcamentoService.cs
+    |   |-- UsuarioService.cs
+    |   |-- AutorizacaoService.cs
+    |   `-- PasswordHasher.cs
     `-- Repositories
         |-- IClienteRepository.cs
         |-- IServicoRepository.cs
         |-- IOrcamentoRepository.cs
+        |-- IUsuarioRepository.cs
         |-- SqliteDatabase.cs
         |-- SqliteClienteRepository.cs
         |-- SqliteServicoRepository.cs
-        `-- SqliteOrcamentoRepository.cs
+        |-- SqliteOrcamentoRepository.cs
+        `-- SqliteUsuarioRepository.cs
 ```
 
 ## Arquitetura
@@ -112,6 +122,25 @@ Forms
 - `Services`: regras de validação e coordenação das operações.
 - `Repositories`: acesso aos dados e comandos SQLite.
 - `Models`: entidades principais do domínio.
+
+## Autenticação e RBAC
+
+O sistema exige login antes de abrir as telas principais. No primeiro acesso, caso não exista nenhum usuário cadastrado, o sistema cria automaticamente um administrador padrão:
+
+```text
+Login: admin
+Senha: 1234
+```
+
+Papéis disponíveis:
+
+| Papel | Permissões |
+| --- | --- |
+| Admin | Acessa todos os módulos, altera dados e gerencia usuários. |
+| Operador | Altera clientes, serviços e orçamentos, mas não gerencia usuários. |
+| Visualizador | Consulta dados, mas não salva, edita, exclui, aprova ou rejeita. |
+
+As permissões são aplicadas na interface e também na camada de `Services`, antes das operações de gravação no SQLite.
 
 ## Funcionalidades Implementadas
 
@@ -145,6 +174,15 @@ Forms
 - Aprovação de orçamentos pendentes.
 - Rejeição com motivo.
 - Geração automática do número de pedido na aprovação.
+
+### Usuários
+
+- Login obrigatório antes do painel principal.
+- Cadastro e edição de usuários por administradores.
+- Definição de papel por usuário.
+- Bloqueio de exclusão do próprio usuário logado.
+- Proteção para manter pelo menos um administrador ativo.
+- Senhas armazenadas com hash PBKDF2.
 
 ## Interface
 
@@ -180,6 +218,8 @@ Os dados são armazenados em SQLite no perfil do usuário:
 ```
 
 Na primeira execução, o banco é criado automaticamente. Caso existam dados legados carregados pela classe `Dados`, eles são migrados para o SQLite quando o banco ainda está vazio.
+
+Além das tabelas de clientes, serviços e orçamentos, o banco também cria as tabelas `Papeis` e `Usuarios` para autenticação e autorização.
 
 ## Solução de Problemas
 

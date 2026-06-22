@@ -15,21 +15,24 @@ namespace ProjetoOrcamento.Forms
         private readonly ClienteService _clienteService = new();
         private readonly ServicoService _servicoService = new();
         private readonly OrcamentoService _orcamentoService = new();
+        private readonly Usuario _usuarioLogado;
 
         private Orcamento _orcamentoAtual;
 
-        public FrmOrcamento()
+        public FrmOrcamento(Usuario usuarioLogado)
         {
+            _usuarioLogado = usuarioLogado;
             InitializeComponent();
             _orcamentoAtual = new Orcamento();
             ConfigurarFormulario();
             ConfigurarDataGridView();
             ConfigurarToolTips();
+            AplicarPermissoes();
         }
 
         private void ConfigurarFormulario()
         {
-            lblUsuario.Text = $"Usuário: {Environment.UserName}";
+            lblUsuario.Text = $"Usuário: {_usuarioLogado.Nome} ({_usuarioLogado.Papel.Nome})";
             AtualizarRelogio();
 
             tmrRelogio.Interval = 1000;
@@ -103,6 +106,26 @@ namespace ProjetoOrcamento.Forms
             dgvItens.Columns["btnRemoverGrid"]!.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
         }
 
+        private void AplicarPermissoes()
+        {
+            var podeAlterar = _usuarioLogado.PodeAlterarDados;
+
+            cmbCliente.Enabled = podeAlterar;
+            cmbServico.Enabled = podeAlterar;
+            nudQuantidade.Enabled = podeAlterar;
+            btnAdicionarItem.Enabled = podeAlterar;
+            btnRemoverItem.Enabled = podeAlterar;
+            btnCriarOrcamento.Enabled = podeAlterar;
+            btnLimpar.Enabled = podeAlterar;
+            btnCancelar.Enabled = podeAlterar;
+
+            if (dgvItens.Columns.Contains("btnRemoverGrid"))
+                dgvItens.Columns["btnRemoverGrid"]!.Visible = podeAlterar;
+
+            if (!podeAlterar)
+                DefinirStatus("Perfil Visualizador: criação de orçamentos bloqueada.", _cinzaTexto);
+        }
+
         private void ConfigurarToolTips()
         {
             toolTip.SetToolTip(cmbCliente, "Selecione o cliente do orçamento.");
@@ -161,6 +184,9 @@ namespace ProjetoOrcamento.Forms
 
         private void btnAdicionarItem_Click(object sender, EventArgs e)
         {
+            if (!ValidarPermissaoAlteracao("adicionar itens ao orçamento"))
+                return;
+
             try
             {
                 if (!ValidarCamposItem())
@@ -231,12 +257,15 @@ namespace ProjetoOrcamento.Forms
 
         private void btnCriarOrcamento_Click(object sender, EventArgs e)
         {
+            if (!ValidarPermissaoAlteracao("criar orçamentos"))
+                return;
+
             try
             {
                 if (cmbCliente.SelectedItem is Cliente cliente)
                     _orcamentoAtual.Cliente = cliente;
 
-                _orcamentoService.Criar(_orcamentoAtual);
+                _orcamentoService.Criar(_orcamentoAtual, _usuarioLogado);
 
                 MessageBox.Show(
                     $"Orçamento criado com sucesso!\nID: {_orcamentoAtual.Id}\nTotal: {_orcamentoAtual.CalcularTotal():C2}",
@@ -250,6 +279,11 @@ namespace ProjetoOrcamento.Forms
             catch (InvalidOperationException ex)
             {
                 MessageBox.Show(ex.Message, "Validação", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                DefinirStatus(ex.Message, ColorTranslator.FromHtml("#DC2626"));
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                MessageBox.Show(ex.Message, "Acesso negado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 DefinirStatus(ex.Message, ColorTranslator.FromHtml("#DC2626"));
             }
             catch (Exception ex)
@@ -274,6 +308,9 @@ namespace ProjetoOrcamento.Forms
 
         private void RemoverItemSelecionado()
         {
+            if (!ValidarPermissaoAlteracao("remover itens do orçamento"))
+                return;
+
             if (dgvItens.CurrentRow?.DataBoundItem is not ItemOrcamentoExibicao item)
             {
                 MessageBox.Show("Selecione um item para remover.", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -302,6 +339,9 @@ namespace ProjetoOrcamento.Forms
 
         private void ReiniciarOrcamento()
         {
+            if (!_usuarioLogado.PodeAlterarDados)
+                return;
+
             _orcamentoAtual = new Orcamento();
             errorProvider.Clear();
             cmbCliente.SelectedIndex = -1;
@@ -344,6 +384,17 @@ namespace ProjetoOrcamento.Forms
         {
             DefinirStatus(mensagemAmigavel, ColorTranslator.FromHtml("#DC2626"));
             MessageBox.Show($"{mensagemAmigavel}\n\nDetalhes: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
+        private bool ValidarPermissaoAlteracao(string acao)
+        {
+            if (_usuarioLogado.PodeAlterarDados)
+                return true;
+
+            var mensagem = $"Seu perfil não permite {acao}.";
+            DefinirStatus(mensagem, ColorTranslator.FromHtml("#DC2626"));
+            MessageBox.Show(mensagem, "Acesso negado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return false;
         }
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)

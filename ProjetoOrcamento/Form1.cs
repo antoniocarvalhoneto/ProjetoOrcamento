@@ -8,42 +8,50 @@ namespace ProjetoOrcamento
 {
     public partial class Form1 : Form
     {
+        private readonly Usuario _usuarioLogado;
         private readonly ClienteService _clienteService = new();
         private readonly ServicoService _servicoService = new();
         private readonly OrcamentoService _orcamentoService = new();
 
-        public Form1()
+        public Form1(Usuario usuarioLogado)
         {
+            _usuarioLogado = usuarioLogado;
             InitializeComponent();
             ConfigurarFormulario();
         }
 
         private void btnClientes_Click(object sender, EventArgs e)
         {
-            FrmClientes tela = new FrmClientes();
+            FrmClientes tela = new FrmClientes(_usuarioLogado);
             tela.ShowDialog();
             AtualizarIndicadores();
         }
 
         private void btnServicos_Click(object sender, EventArgs e)
         {
-            FrmServicoss tela = new FrmServicoss();
+            FrmServicoss tela = new FrmServicoss(_usuarioLogado);
             tela.ShowDialog();
             AtualizarIndicadores();
         }
 
         private void btnOrcamentos_Click(object sender, EventArgs e)
         {
-            FrmOrcamento tela = new FrmOrcamento();
+            FrmOrcamento tela = new FrmOrcamento(_usuarioLogado);
             tela.ShowDialog();
             AtualizarIndicadores();
         }
 
         private void btnListarOrcamentos_Click(object sender, EventArgs e)
         {
-            FrmListaOrcamentos tela = new FrmListaOrcamentos();
+            FrmListaOrcamentos tela = new FrmListaOrcamentos(_usuarioLogado);
             tela.ShowDialog();
             AtualizarIndicadores();
+        }
+
+        private void btnUsuarios_Click(object sender, EventArgs e)
+        {
+            FrmUsuarios tela = new FrmUsuarios(_usuarioLogado);
+            tela.ShowDialog();
         }
 
         private void lblTituloSistema_Click(object sender, EventArgs e)
@@ -63,7 +71,14 @@ namespace ProjetoOrcamento
 
         private void ConfigurarFormulario()
         {
-            lblUsuario.Text = $"Usuário: {Environment.UserName}";
+            lblUsuario.Text = $"Usuário: {_usuarioLogado.Nome} ({_usuarioLogado.Papel.Nome})";
+            btnUsuarios.Visible = _usuarioLogado.EhAdmin;
+            picLogoRodape.Visible = !_usuarioLogado.EhAdmin;
+            btnOrcamentos.Enabled = _usuarioLogado.PodeAlterarDados;
+
+            if (!_usuarioLogado.PodeAlterarDados)
+                lblIntroTexto.Text = "Seu perfil permite consultar dados. Alterações ficam bloqueadas pelo controle de acesso.";
+
             AtualizarRelogio();
 
             tmrRelogio.Interval = 1000;
